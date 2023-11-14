@@ -14,8 +14,12 @@ User = get_user_model()
 
 def home(request):
     package = Package.objects.all()
-    company = Company.objects.all()[0]
-    founder = Founder.objects.all()[0]
+    try:
+        company = Company.objects.get(id=1)
+        founder = Founder.objects.get(id=1)
+    except Exception:
+        company = {}
+        founder = {}
     all_courses = Course.objects.all()
     course = Course.objects.all().order_by('likes')[:3]
     instructor = User.objects.filter(type=1)
@@ -32,9 +36,12 @@ def home(request):
 
 def dashboard(request):
     if request.user.is_authenticated:
-        package_taken = PackageTaken.objects.filter(user_id=request.user.id)
-        package_id = package_taken[0].package.pk
-        course = Course.objects.filter(package__id=package_id)
+        try:
+            package_taken = PackageTaken.objects.filter(user_id=request.user.id)
+            package_id = package_taken[0].package.pk
+            course = Course.objects.filter(package__id=package_id)
+        except Exception:
+            course = {}
         context = {
             'course': course,
         }
@@ -73,13 +80,18 @@ def set_profile_image(request):
 
 
 def admin_dashboard(request):
-    return render(request, 'course/admin_dashboard.html')
+    return render(request, 'admin/admin_dashboard.html')
 
 
 def leaderboard(request):
     if request.user.is_authenticated:
-        earn = Earning.objects.filter(user__id=request.user.id)
+        try:
+            earn = Earning.objects.get(user__id=request.user.id)
+        except Exception:
+            earn = {
+                "earned": 0
+            }
         context = {
-            'earn': earn[0]
+            'earn': earn
         }
     return render(request, 'leaderboard.html', context)

@@ -1,0 +1,102 @@
+{% extends "base.html" %} {% load static %} {% block title %}Package Detail{% endblock title %}
+{% block header %}
+
+<style>
+    .pv_container{
+        height: 100vh;
+        width: 100vw;
+    }
+    .pvbg_image{
+        width: 100vw;
+        height: 50vh;
+    }
+    .pvbg_image img{
+        height: 100%;
+        width: 100%;
+    }
+    .pv_container .pv_text{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
+        padding-top: 1rem;
+    }
+    .pv_btn{
+        padding: 0.5rem 1rem;
+        outline: none;
+        border: 2px solid orange;
+        background-color: orange;
+        color: white;
+        transition: all 300ms ease;
+        font-weight: bold;
+        border-radius: 20px;
+        cursor: pointer;
+    }
+    .pv_btn:hover{
+        background-color: transparent;
+        color: orange;
+    }
+
+</style>
+
+{% endblock header %}
+{% block body %}
+<div class="pv_container">
+    <div class="pvbg_image">
+        <img src="{{package.bg_image.url}}" alt="package background image"/>
+    </div>
+    <div class="pv_text">
+        <h1>Package: {{package.name}}</h1>
+        <h3>Price: {{package.price}}</h3>
+        <p>{{package.description}}</p>
+        {% if user.is_authenticated %}
+            {% if p.is_success %}
+                <p>You already purchased the course.</p>
+            {% else %}
+                <button id="rzp-button1" class="pv_btn">Buy Now</button>
+            {% endif %}
+        {% else %}
+            <p>Login to buy the course.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock body %}
+{% block script %}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "rzp_test_JhJ7T29B0KtFsM", // Enter the Key ID generated from the Dashboard
+    "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Money Zone",
+    "description": "Package purchase transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        window.location.href = `/course/payment-success?order_id={{payment.id}}&package_id={{package.id}}`
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+{% endblock script %}

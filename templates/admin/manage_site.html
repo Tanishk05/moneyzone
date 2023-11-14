@@ -58,7 +58,14 @@
                 <input type="submit" value="Submit">
             </form>
         </div>
-        <div class="right"></div>
+        <div class="right">
+            <h1>Add Course</h1>
+            <form action="add-course" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     </div>
 </div>
 

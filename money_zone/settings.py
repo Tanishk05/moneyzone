@@ -24,21 +24,25 @@ EMAIL_USE_TLS = (os.environ.get('EMAIL_USE_TLS') == "1")
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
+EMAIL_PORT = 587
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'django-insecure--y0g$*3!nts)9w1bd#c_7l!n=rn!2s8j%&x9ot4@^_(r!hhjxx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get('DEBUG') == "1")
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['Tanishk05.pythonanywhere.com']
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
 
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # Application definition
 
@@ -48,16 +52,18 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'authentication.apps.AuthenticationConfig',
     'home.apps.HomeConfig',
     'course.apps.CourseConfig',
-    'rest_framework'
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -70,7 +76,7 @@ ROOT_URLCONF = 'money_zone.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,8 +97,11 @@ WSGI_APPLICATION = 'money_zone.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'Tanishk05$moneyzone',
+        'USER': 'Tanishk05',
+        'PASSWORD': 'Tan@6242',
+        'HOST':'Tanishk05.mysql.pythonanywhere-services.com',
     }
 }
 
@@ -130,11 +139,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
-] 
+]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

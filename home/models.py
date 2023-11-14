@@ -19,7 +19,7 @@ class Company(models.Model):
 
 class Founder(models.Model):
     name = models.CharField(max_length=200)
-    profile_image = models.ImageField(upload_to="static/images/founder")
+    profile_image = models.ImageField(upload_to="images/founder")
     description = models.TextField()
 
     def __str__(self) -> str:

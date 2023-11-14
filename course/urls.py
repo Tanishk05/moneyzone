@@ -6,4 +6,6 @@ urlpatterns = [
     path('view-package/<slug>', views.view_package, name="view-package"),
     path('manage-site', views.manage_site, name="manage-site"),
     path('add-package', views.add_package, name="add-package"),
+    path('add-course', views.add_course, name="add-course"),
+    path('payment-success', views.payment_success, name="payment-success"),
 ]
